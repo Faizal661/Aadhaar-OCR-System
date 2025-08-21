@@ -1,10 +1,13 @@
-import React from "react";
+import "../assets/styles/cardInfo.css";
 
 const CardInfo = () => {
   return (
-    <React.Fragment>
-      <p>card info </p>
-    </React.Fragment>
+    <div className="card-body">
+      <h3>API Response</h3>
+      <div className="api-response-box">
+        <p>" Start Performing OCR by inputting your Aadhaar front and back "</p>
+      </div>
+    </div>
   );
 };
 

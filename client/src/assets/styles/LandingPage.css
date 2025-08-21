@@ -1,9 +1,21 @@
-/* #root {
-    margin:0 auto;
-    padding: 2 rem;
-    text-align: center;
-} */
+/* .landing-page{ */
+/* } */
 
-.landing-page{
+.landing-body {
     display: flex;
+    gap: 100px;
+    /* height: 100%;
+    width: 100%; */
+}
+
+.landing-header {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.aadhaar-logo {
+    width: 65px;
+    height: 40px;
 }
