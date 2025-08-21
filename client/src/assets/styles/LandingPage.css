@@ -3,9 +3,9 @@
 
 .landing-body {
     display: flex;
-    gap: 100px;
-    /* height: 100%;
-    width: 100%; */
+    gap: 50px;
+    padding-top: 8px;
+    /* background-color: slategrey; */
 }
 
 .landing-header {

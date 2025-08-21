@@ -2,42 +2,84 @@ import "../assets/styles/imageUpload.css";
 import uploadIcon from "../assets/images/upload_icon.png";
 import imageIcon from "../assets/images/upload_image.png";
 import { useRef, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import uploadAadhaarImages from "../services/uploadAadhaar";
 
 const ImageUpload = () => {
   const AADHAAR_FRONT_REF = useRef<HTMLInputElement>(null);
   const AADHAAR_BACK_REF = useRef<HTMLInputElement>(null);
 
+  const [aadhaarFrontFile, setAadhaarFrontFile] = useState<File | null>(null);
+  const [aadhaarBackFile, setAadhaarBackFile] = useState<File | null>(null);
+
   const [aadhaarFrontPreview, setAadhaarFrontPreview] = useState("");
   const [aadhaarBackPreview, setAadhaarBackPreview] = useState("");
 
-  function frontImageClick() {
+  const uploadAadhaarImagesMutation = useMutation({
+    mutationFn: uploadAadhaarImages,
+    onSuccess: (data) => {
+      console.log("Upload successful!", data);
+      alert("Aadhaar images uploaded successfully!");
+    },
+    onError: (err) => {
+      console.error("Upload failed:", err);
+      alert("Failed to upload images. Please try again.");
+    },
+  });
+
+  const frontImageClick = () => {
     AADHAAR_FRONT_REF.current?.click();
-  }
+  };
 
-  function backImageClick() {
+  const backImageClick = () => {
     AADHAAR_BACK_REF.current?.click();
-  }
+  };
 
-  function aadhaarFrontImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const aadhaarFrontImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       const imageUrl = URL.createObjectURL(file);
+
+      setAadhaarFrontFile(file);
       setAadhaarFrontPreview(imageUrl);
     }
-  }
+  };
 
-  function aadhaarBackImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const aadhaarBackImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       const imageUrl = URL.createObjectURL(file);
+
+      setAadhaarBackFile(file);
       setAadhaarBackPreview(imageUrl);
     }
-  }
+  };
 
-  function removeImage(side: string) {
-    if (side === "front") setAadhaarFrontPreview("");
-    else if (side === "back") setAadhaarBackPreview("");
-  }
+  const removeImage = (side: string) => {
+    if (side === "front") {
+      setAadhaarFrontPreview("");
+      setAadhaarFrontFile(null);
+    } else if (side === "back") {
+      setAadhaarBackPreview("");
+      setAadhaarBackFile(null);
+    }
+  };
+
+  const handleUpload = () => {
+    if (!aadhaarFrontFile || !aadhaarBackFile) {
+      alert("Please select both Aadhaar front and back images.");
+      return;
+    }
+
+    uploadAadhaarImagesMutation.mutate({
+      frontImage: aadhaarFrontFile,
+      backImage: aadhaarBackFile,
+    });
+  };
 
   return (
     <div className="upload-body">
@@ -122,7 +164,23 @@ const ImageUpload = () => {
         onChange={aadhaarBackImageChange}
       />
 
-      <button id="parse-btn">parse aadhaar</button>
+      {uploadAadhaarImagesMutation.isSuccess && (
+        <p style={{ color: "green" }}>Upload complete!</p>
+      )}
+      {uploadAadhaarImagesMutation.isError && (
+        <p style={{ color: "red" }}>
+          Error: {uploadAadhaarImagesMutation.error?.message}
+        </p>
+      )}
+      <button
+        id="parse-btn"
+        onClick={handleUpload}
+        disabled={uploadAadhaarImagesMutation.isPending}
+      >
+        {uploadAadhaarImagesMutation.isPending
+          ? "Uploading..."
+          : "Parse Aadhaar"}
+      </button>
     </div>
   );
 };
