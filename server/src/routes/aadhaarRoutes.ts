@@ -1,34 +1,17 @@
+import "reflect-metadata";
+import { container } from "tsyringe";
+import "../config/tsyringe.container"
 import { Router } from "express";
-import multer from "multer";
-import uploadImages from "../controllers/uploadController";
+import uploadAadhaarImages from "../middlewares/multer.middleware";
+import { IOcrController } from "../controllers/interface/IOcrController";
 
 const router = Router();
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./uploads/");
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, `${file.fieldname}-${uniqueSuffix}.png`);
-  },
-});
-
-const upload = multer({ storage: storage });
+const OcrController = container.resolve<IOcrController>("OcrController");
 
 router.post(
-  "/upload-aadhaar",
-  upload.fields([
-    {
-      name: "aadhaarFront",
-      maxCount: 1,
-    },
-    {
-      name: "aadhaarBack",
-      maxCount: 1,
-    },
-  ]),
-  uploadImages
+  "/",
+  uploadAadhaarImages,
+  (req, res, next) => OcrController.extractAadhaarDetails(req, res, next)
 );
 
 export default router;

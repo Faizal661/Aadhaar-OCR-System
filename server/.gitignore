@@ -1,3 +1,7 @@
 .env
 node_modules
-uploads
+dist
+
+src/uploads
+service.account.json
+.env.production
