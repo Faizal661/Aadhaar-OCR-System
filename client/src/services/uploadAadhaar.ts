@@ -8,7 +8,7 @@ const uploadAadhaarImages = async (data: {
   formData.append("aadhaarFront", data.frontImage);
   formData.append("aadhaarBack", data.backImage);
 
-  const response = await api.post("/upload-aadhaar", formData, {
+  const response = await api.post("/parse-aadhaar", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
