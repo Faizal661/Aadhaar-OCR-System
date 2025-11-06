@@ -11,7 +11,7 @@ const OcrController = container.resolve<IOcrController>("OcrController");
 router.post(
   "/",
   uploadAadhaarImages,
-  (req, res, next) => OcrController.extractAadhaarDetails(req, res, next)
+  OcrController.extractAadhaarDetails
 );
 
 export default router;

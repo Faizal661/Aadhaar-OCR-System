@@ -19,7 +19,7 @@ const errorHandler = (
     if (err.code === "LIMIT_FILE_SIZE") {
       res
         .status(HttpResCode.BAD_REQUEST)
-        .json({ message: HttpResMsg.IMAGE_SIZE_TOOLARGE });
+        .json({ message: HttpResMsg.IMAGE_SIZE_TOO_LARGE });
     }
   }
   

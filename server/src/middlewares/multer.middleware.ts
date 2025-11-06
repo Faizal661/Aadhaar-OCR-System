@@ -1,4 +1,5 @@
 import multer from "multer";
+import { MAX_UPLOAD_SIZE_BYTES } from "../constants/app-config.constants";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -13,7 +14,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: {
-    fileSize: 5 * 1024 * 1024,
+    fileSize: MAX_UPLOAD_SIZE_BYTES ,
   },
 });
 

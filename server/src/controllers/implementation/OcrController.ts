@@ -23,11 +23,11 @@ export default class OcrController implements IOcrController {
     this.ocrService = ocrService;
   }
 
-  async extractAadhaarDetails(
+  public extractAadhaarDetails = async (
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<void> {
+  ): Promise<void> => {
     try {
       const files = req.files as MulterFiles;
 
@@ -62,11 +62,13 @@ export default class OcrController implements IOcrController {
       });
     } catch (error) {
       if (error instanceof CustomError) {
-        throw error;
+        return next(error);
       }
-      throw new CustomError(
-        HttpResMsg.FAILED_TO_EXTRACT_DETAILS,
-        HttpResCode.INTERNAL_SERVER_ERROR
+      return next(
+        new CustomError(
+          HttpResMsg.FAILED_TO_EXTRACT_DETAILS,
+          HttpResCode.INTERNAL_SERVER_ERROR
+        )
       );
     }
   }
