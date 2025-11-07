@@ -1,21 +1,44 @@
-/* .landing-page{ */
-/* } */
+.aadhaar-logo {
+    width: 65px;
+    height: 40px;
+}
 
 .landing-body {
     display: flex;
+    margin-top: 30px;
     gap: 50px;
-    padding-top: 8px;
-    /* background-color: slategrey; */
+
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .landing-header {
     display: flex;
-    gap: 10px;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    padding: 15px 30px;
+    gap: 30px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.aadhaar-logo {
-    width: 65px;
-    height: 40px;
+@media (max-width: 768px) {
+    .landing-header {
+        flex-direction: column;
+        justify-content: center;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .landing-body {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
 }
