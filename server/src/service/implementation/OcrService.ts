@@ -1,7 +1,6 @@
 import CustomError from "../../errors/CustomError";
 import { IOcrService } from "../interface/IOcrService";
 import extractAadhaarDetails from "../../utils/extractAadhaarDetails";
-import axios from "axios";
 import { GoogleGenAI } from "@google/genai";
 import * as fs from "fs/promises";
 import {
@@ -13,8 +12,8 @@ import {
   AadhaarDetails,
   AadhaarFrontData,
 } from "../../types/aadhaarData";
-import FRONT_SCHEMA from "../../schema/AadhaarFront.schema";
-import BACK_SCHEMA from "../../schema/adhaarBach.schema";
+import FRONT_SCHEMA from "../../schema/aadhaarFront.schema";
+import BACK_SCHEMA from "../../schema/adhaarBack.schema";
 import {
   BACK_PAGE_DETAILS_EXTRACTION_PROMPT,
   FRONT_PAGE_DETAILS_EXTRACTION_PROMPT,
@@ -148,13 +147,10 @@ export default class OcrService implements IOcrService {
   }
 
   private _handleApiError(error: any): CustomError | Error {
-    if (axios.isAxiosError(error) && error.response) {
-      console.error("OCR API Response Error Data:", error.response.data);
-      return new CustomError(
-        `OCR API Failed: ${error.response.data.message || "Unknown API error"}`,
-        HttpResCode.BAD_REQUEST
-      );
-    }
-    return error;
+    console.error("OCR API Response Error Data:", error.response.data);
+    return new CustomError(
+      `OCR API Failed: ${error.response.data.message || "Unknown API error"}`,
+      HttpResCode.BAD_REQUEST
+    );
   }
 }
