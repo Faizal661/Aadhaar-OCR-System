@@ -50,21 +50,20 @@ export default class OcrController implements IOcrController {
         files.aadhaarBack[0].filename
       );
 
-      // const extractedAadhaarData = await this.ocrService.processAadhaar(
-      //   aadhaarFrontPath,
-      //   aadhaarBackPath
-      // );
-      const extractedAadhaarData = {
-        address:
-          "saray dan shah, KATRAULI, Poore Durgi, Phoolpur, Allahabad, Uttar Pradesh",
-        pincode: "212402",
-        uid: "8867 0905 4086",
-        name: "RAUSHAN KUMAR",
-        dob: "26/07/1994",
-        gender: "MALE",
-        isUidMatch: false,
-        ageBand: "30-40 (Age: 31)",
-      };
+      const extractedAadhaarData = await this.ocrService.processAadhaar(
+        aadhaarFrontPath,
+        aadhaarBackPath
+      );
+      // const extractedAadhaarData =  {
+      //   address: 'C/O Shivpujan Rai, hulsi niwas, salimpur ahra, Phulwari, Patna, Bihar',
+      //   pincode: '800003',
+      //   uid: '8867 0905 4086',
+      //   name: 'RAUSHAN KUMAR',
+      //   dob: '26/07/1994',
+      //   gender: 'MALE',
+      //   isUidMatch: true,
+      //   ageBand: '30-40 (Age: 31)'
+      // }
       res.status(200).json({
         message: HttpResMsg.SUCCESS,
         extractedAadhaarData,

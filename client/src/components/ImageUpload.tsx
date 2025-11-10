@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import uploadAadhaarImages from "../services/uploadAadhaar";
 import { useAadhaar } from "../contexts/aadhaarContext";
+import toast from "react-hot-toast";
 
 const ImageUpload = () => {
   const { setOcrResult, setIsProcessing } = useAadhaar();
@@ -26,13 +27,26 @@ const ImageUpload = () => {
     },
     onSuccess: (data) => {
       console.log("Upload successful!", data);
+      toast.success("Successfully parsed Aadhaar details.", {
+        icon: "✅",
+        style: {
+          borderRadius: "10px",
+          background:'#99FF99'
+        },
+      });
       setOcrResult(data.extractedAadhaarData);
-      console.warn("Aadhaar images uploaded successfully! OCR data available.");
     },
     onError: (err) => {
-      console.error("Upload failed:", err);
       setOcrResult(null);
-      console.error("Failed to upload images. Please try again.");
+      toast(
+        err.message || "Failed to parse Aadhaar details due to server error.",
+        {
+          icon: "❌",
+          style: {
+            borderRadius: "10px",
+          },
+        }
+      );
     },
     onSettled: () => {
       setIsProcessing(false);
@@ -86,7 +100,13 @@ const ImageUpload = () => {
 
   const handleUpload = () => {
     if (!aadhaarFrontFile || !aadhaarBackFile) {
-      console.warn("Please select both Aadhaar front and back images."); 
+      toast("Please select both Aadhaar front and back images.", {
+        icon: "❌",
+        style: {
+          borderRadius: "10px",
+          background:"#f333"
+        },
+      });
       return;
     }
 
@@ -182,9 +202,7 @@ const ImageUpload = () => {
       <button
         id="parse-btn"
         onClick={handleUpload}
-        disabled={
-          uploadAadhaarImagesMutation.isPending 
-        }
+        disabled={uploadAadhaarImagesMutation.isPending}
       >
         {uploadAadhaarImagesMutation.isPending
           ? "Uploading..."
