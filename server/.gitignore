@@ -3,5 +3,4 @@ node_modules
 dist
 
 src/uploads
-service.account.json
 .env.production
