@@ -4,8 +4,11 @@ import imageIcon from "../assets/images/upload_image.png";
 import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import uploadAadhaarImages from "../services/uploadAadhaar";
+import { useAadhaar } from "../contexts/aadhaarContext";
 
 const ImageUpload = () => {
+  const { setOcrResult, setIsProcessing } = useAadhaar();
+
   const AADHAAR_FRONT_REF = useRef<HTMLInputElement>(null);
   const AADHAAR_BACK_REF = useRef<HTMLInputElement>(null);
 
@@ -17,13 +20,22 @@ const ImageUpload = () => {
 
   const uploadAadhaarImagesMutation = useMutation({
     mutationFn: uploadAadhaarImages,
+    onMutate: () => {
+      setIsProcessing(true);
+      setOcrResult(null);
+    },
     onSuccess: (data) => {
       console.log("Upload successful!", data);
-      alert("Aadhaar images uploaded successfully!");
+      setOcrResult(data.extractedAadhaarData);
+      console.warn("Aadhaar images uploaded successfully! OCR data available.");
     },
     onError: (err) => {
       console.error("Upload failed:", err);
-      alert("Failed to upload images. Please try again.");
+      setOcrResult(null);
+      console.error("Failed to upload images. Please try again.");
+    },
+    onSettled: () => {
+      setIsProcessing(false);
     },
   });
 
@@ -44,6 +56,7 @@ const ImageUpload = () => {
 
       setAadhaarFrontFile(file);
       setAadhaarFrontPreview(imageUrl);
+      setOcrResult(null);
     }
   };
 
@@ -56,6 +69,7 @@ const ImageUpload = () => {
 
       setAadhaarBackFile(file);
       setAadhaarBackPreview(imageUrl);
+      setOcrResult(null);
     }
   };
 
@@ -67,11 +81,12 @@ const ImageUpload = () => {
       setAadhaarBackPreview("");
       setAadhaarBackFile(null);
     }
+    setOcrResult(null);
   };
 
   const handleUpload = () => {
     if (!aadhaarFrontFile || !aadhaarBackFile) {
-      alert("Please select both Aadhaar front and back images.");
+      console.warn("Please select both Aadhaar front and back images."); 
       return;
     }
 
@@ -164,18 +179,12 @@ const ImageUpload = () => {
         onChange={aadhaarBackImageChange}
       />
 
-      {uploadAadhaarImagesMutation.isSuccess && (
-        <p style={{ color: "green" }}>Upload complete!</p>
-      )}
-      {uploadAadhaarImagesMutation.isError && (
-        <p style={{ color: "red" }}>
-          Error: {uploadAadhaarImagesMutation.error?.message}
-        </p>
-      )}
       <button
         id="parse-btn"
         onClick={handleUpload}
-        disabled={uploadAadhaarImagesMutation.isPending}
+        disabled={
+          uploadAadhaarImagesMutation.isPending 
+        }
       >
         {uploadAadhaarImagesMutation.isPending
           ? "Uploading..."
