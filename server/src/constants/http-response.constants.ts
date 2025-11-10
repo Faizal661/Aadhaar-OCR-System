@@ -45,7 +45,6 @@ export const enum HttpResMsg {
 
   IMAGE_SIZE_TOO_LARGE = "Image size limit exceeded",
   BOTH_IMAGES_NEEDED="Both files were needed to extract details.",
-  IMAGE_UPLOADED_SUCCESSFULLY="Images uploaded and parsed successfully",
 
   FAILED_TO_EXTRACT_DETAILS="Failed to extract aadhaar details",
   FAILED_TO_REMOVE_FILES='Failed to remove files.',

@@ -37,6 +37,17 @@ const env = {
     }
     return process.env.GOOGLE_APPLICATION_CREDENTIALS;
   },
+
+  get OCR_API_KEY(): string {
+    if (!process.env.OCR_API_KEY) {
+      throw new CustomError(
+        "OCR API Token is missing in environment variables.",
+        HttpResCode.INTERNAL_SERVER_ERROR
+      );
+    }
+    return process.env.OCR_API_KEY;
+  },
+
 };
 
 export default env;

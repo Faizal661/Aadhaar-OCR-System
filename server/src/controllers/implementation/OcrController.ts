@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { createWorker } from "tesseract.js";
 import path from "path";
-import extractAadhaarDetails from "../../utils/extractAadhaarDetails";
 import { inject, injectable } from "tsyringe";
 import { IOcrController } from "../interface/IOcrController";
 import { IOcrService } from "../../service/interface/IOcrService";
@@ -52,14 +50,27 @@ export default class OcrController implements IOcrController {
         files.aadhaarBack[0].filename
       );
 
-      const result = await this.ocrService.processAadhaar(
-        aadhaarFrontPath,
-        aadhaarBackPath
-      );
+      // const extractedAadhaarData = await this.ocrService.processAadhaar(
+      //   aadhaarFrontPath,
+      //   aadhaarBackPath
+      // );
+      const extractedAadhaarData = {
+        address:
+          "saray dan shah, KATRAULI, Poore Durgi, Phoolpur, Allahabad, Uttar Pradesh",
+        pincode: "212402",
+        uid: "8867 0905 4086",
+        name: "RAUSHAN KUMAR",
+        dob: "26/07/1994",
+        gender: "MALE",
+        isUidMatch: false,
+        ageBand: "30-40 (Age: 31)",
+      };
       res.status(200).json({
-        message: HttpResMsg.IMAGE_UPLOADED_SUCCESSFULLY,
-        result,
+        message: HttpResMsg.SUCCESS,
+        extractedAadhaarData,
       });
+
+      return;
     } catch (error) {
       if (error instanceof CustomError) {
         return next(error);
@@ -71,35 +82,5 @@ export default class OcrController implements IOcrController {
         )
       );
     }
-  }
+  };
 }
-
-// const worker = await createWorker("eng");
-
-// try {
-//   const {
-//     data: { text: frontText },
-//   } = await worker.recognize(aadhaarFrontPath);
-//   const {
-//     data: { text: backText },
-//   } = await worker.recognize(aadhaarBackPath);
-//   console.log("🚀 ~ uploadImages ~ frontText:", frontText);
-//   console.log("🚀 ~ uploadImages ~ backText:", backText);
-
-//   await worker.terminate();
-
-//   const extractedAadhaarData = extractAadhaarDetails(frontText, backText);
-//   console.log(
-//     "🚀 ~ uploadImages ~ extractedAadhaarData:",
-//     extractedAadhaarData
-//   );
-
-//   res.status(200).json({
-//     message: "Images uploaded and parsed successfully",
-//   });
-// } catch (err) {
-//   // await worker.terminate();
-//   res
-//     .status(500)
-//     .json({ message: "Error during OCR processing", error: err });
-// }

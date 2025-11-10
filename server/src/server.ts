@@ -1,17 +1,19 @@
+import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
 import "reflect-metadata";
 import cors from "cors";
-import express from "express";
-import dotenv from "dotenv";
 import aadhaarRoutes from "../src/routes/aadhaarRoutes";
 import CustomError from "./errors/CustomError";
 import { HttpResCode, HttpResMsg } from "./constants/http-response.constants";
 import errorHandler from "./middlewares/error-handler.middleware";
-dotenv.config();
+import env from "./config/env.config";
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = env.PORT || 5000;
 
-app.use(cors({ origin: process.env.CLIENT_ORIGIN, credentials: true }));
+app.use(cors({ origin: env.CLIENT_ORIGIN, credentials: true }));
+
 app.use(express.json());
 
 app.use("/api/parse-aadhaar", aadhaarRoutes);
