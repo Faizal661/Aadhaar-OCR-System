@@ -2,7 +2,7 @@ import CustomError from "../../errors/CustomError";
 import { IOcrService } from "../interface/IOcrService";
 import extractAadhaarDetails from "../../utils/extractAadhaarDetails";
 import { GoogleGenAI } from "@google/genai";
-import * as fs from "fs/promises";
+// import * as fs from "fs/promises";
 import {
   HttpResCode,
   HttpResMsg,
@@ -28,16 +28,16 @@ export default class OcrService implements IOcrService {
     this.ai = new GoogleGenAI({ apiKey: process.env.OCR_API_KEY });
   }
   async processAadhaar(
-    frontPath: string,
-    backPath: string
+    frontBuffer: Buffer,
+    backBuffer: Buffer
   ): Promise<AadhaarDetails> {
     let frontData: AadhaarFrontData;
     let backData: AadhaarBackData;
 
     try {
       const [extractedFrontData, extractedBackData] = await Promise.all([
-        this._extractFrontDetails(frontPath),
-        this._extractBackDetails(backPath),
+        this._extractFrontDetails(frontBuffer),
+        this._extractBackDetails(backBuffer),
       ]);
 
       frontData = extractedFrontData;
@@ -60,19 +60,19 @@ export default class OcrService implements IOcrService {
         HttpResMsg.FAILED_TO_EXTRACT_DETAILS,
         HttpResCode.INTERNAL_SERVER_ERROR
       );
-    } finally {
-      try {
-        await Promise.all([fs.unlink(frontPath), fs.unlink(backPath)]);
-      } catch (err) {
-        console.warn(HttpResMsg.FAILED_TO_REMOVE_FILES, err);
-      }
-    }
+    } 
+    // finally {
+    //   try {
+    //     await Promise.all([fs.unlink(frontPath), fs.unlink(backPath)]);
+    //   } catch (err) {
+    //     console.warn(HttpResMsg.FAILED_TO_REMOVE_FILES, err);
+    //   }
+    // }
   }
 
   private async _extractFrontDetails(
-    filePath: string
+    imageBuffer: Buffer
   ): Promise<AadhaarFrontData> {
-    const imageBuffer = await fs.readFile(filePath);
     const base64Image = imageBuffer.toString("base64");
 
     const prompt = FRONT_PAGE_DETAILS_EXTRACTION_PROMPT;
@@ -104,9 +104,8 @@ export default class OcrService implements IOcrService {
   }
 
   private async _extractBackDetails(
-    filePath: string
+    imageBuffer: Buffer
   ): Promise<AadhaarBackData> {
-    const imageBuffer = await fs.readFile(filePath);
     const base64Image = imageBuffer.toString("base64");
 
     const prompt = BACK_PAGE_DETAILS_EXTRACTION_PROMPT;

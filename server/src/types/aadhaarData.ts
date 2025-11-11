@@ -1,6 +1,3 @@
-export interface MulterFiles {
-  [fieldname: string]: Express.Multer.File[];
-}
 
 export interface AadhaarFrontData {
   name: string;

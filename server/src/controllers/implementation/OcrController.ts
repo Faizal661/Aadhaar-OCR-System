@@ -4,12 +4,12 @@ import * as fs from "fs";
 import { inject, injectable } from "tsyringe";
 import { IOcrController } from "../interface/IOcrController";
 import { IOcrService } from "../../service/interface/IOcrService";
-import { MulterFiles } from "../../types/aadhaarData";
 import {
   HttpResCode,
   HttpResMsg,
 } from "../../constants/http-response.constants";
 import CustomError from "../../errors/CustomError";
+import { MulterFiles } from "../../types/multerFiles";
 
 @injectable()
 export default class OcrController implements IOcrController {
@@ -28,7 +28,7 @@ export default class OcrController implements IOcrController {
     next: NextFunction
   ): Promise<void> => {
     try {
-      const UPLOADS_DIR = path.join(__dirname, "../../../uploads");
+      // const UPLOADS_DIR = path.join(__dirname, "../../../uploads");
 
       const files = req.files as MulterFiles;
 
@@ -41,20 +41,24 @@ export default class OcrController implements IOcrController {
         );
       }
 
-      const aadhaarFrontPath = path.join(
-        UPLOADS_DIR,
-        files.aadhaarFront[0].filename
-      );
+      // const aadhaarFrontPath = path.join(
+      //   UPLOADS_DIR,
+      //   files.aadhaarFront[0].filename
+      // );
 
-      const aadhaarBackPath = path.join(
-        UPLOADS_DIR,
-        files.aadhaarBack[0].filename
-      );
+      // const aadhaarBackPath = path.join(
+      //   UPLOADS_DIR,
+      //   files.aadhaarBack[0].filename
+      // );
+
+      const aadhaarFrontBuffer: Buffer = files.aadhaarFront[0].buffer;
+      const aadhaarBackBuffer: Buffer = files.aadhaarBack[0].buffer;
 
       const extractedAadhaarData = await this.ocrService.processAadhaar(
-        aadhaarFrontPath,
-        aadhaarBackPath
+        aadhaarFrontBuffer,
+        aadhaarBackBuffer
       );
+
       res.status(200).json({
         message: HttpResMsg.SUCCESS,
         extractedAadhaarData,
