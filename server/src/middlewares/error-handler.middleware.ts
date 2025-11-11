@@ -12,6 +12,7 @@ const errorHandler = (
   // Custom Error Handling
   if (err instanceof BaseError) {
     res.status(err.statusCode).json({ message: err.message });
+    return;
   }
 
   // Multer size limit error
@@ -20,9 +21,10 @@ const errorHandler = (
       res
         .status(HttpResCode.BAD_REQUEST)
         .json({ message: HttpResMsg.IMAGE_SIZE_TOO_LARGE });
+      return;
     }
   }
-  
+
   // Handle server errors
   res.status(500).json({
     error: HttpResMsg.INTERNAL_SERVER_ERROR,
