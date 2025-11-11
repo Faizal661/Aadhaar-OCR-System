@@ -35,9 +35,6 @@ export default class OcrService implements IOcrService {
     let backData: AadhaarBackData;
 
     try {
-      console.log("Starting Aadhaar detail extraction...");
-
-      console.log("process, env , ocr api key", process.env.OCR_API_KEY);
       const [extractedFrontData, extractedBackData] = await Promise.all([
         this._extractFrontDetails(frontPath),
         this._extractBackDetails(backPath),
@@ -45,9 +42,6 @@ export default class OcrService implements IOcrService {
 
       frontData = extractedFrontData;
       backData = extractedBackData;
-
-      console.log("🚀 ~ Extracted Front Data:", frontData);
-      console.log("🚀 ~ Extracted Back Data:", backData);
 
       const parsedData = extractAadhaarDetails(frontData, backData);
       console.log("🚀 ~ Final Validated Aadhaar Data:", parsedData);
@@ -60,10 +54,7 @@ export default class OcrService implements IOcrService {
         throw error;
       }
       if (error instanceof SyntaxError) {
-        throw new CustomError(
-          `Failed to parse JSON from Gemini API. Data structure error.`,
-          HttpResCode.INTERNAL_SERVER_ERROR
-        );
+        console.error(HttpResMsg.FAILED_TO_PARSE_JSON)
       }
       throw new CustomError(
         HttpResMsg.FAILED_TO_EXTRACT_DETAILS,

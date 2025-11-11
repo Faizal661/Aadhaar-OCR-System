@@ -17,7 +17,7 @@ const FRONT_SCHEMA: Schema = {
     },
     gender: {
       type: Type.STRING,
-      enum: ["MALE", "FEMALE", "OTHER", "UNKNOWN"],
+      enum: ["MALE", "FEMALE"],
       description: "The gender of the resident.",
     },
   },

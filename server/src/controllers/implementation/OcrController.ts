@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import path from "path";
+import * as fs from "fs";
 import { inject, injectable } from "tsyringe";
 import { IOcrController } from "../interface/IOcrController";
 import { IOcrService } from "../../service/interface/IOcrService";
@@ -27,6 +28,8 @@ export default class OcrController implements IOcrController {
     next: NextFunction
   ): Promise<void> => {
     try {
+      const UPLOADS_DIR = path.join(__dirname, "../../../uploads");
+
       const files = req.files as MulterFiles;
 
       if (!files || !files.aadhaarFront || !files.aadhaarBack) {
@@ -39,14 +42,12 @@ export default class OcrController implements IOcrController {
       }
 
       const aadhaarFrontPath = path.join(
-        __dirname,
-        "../../../uploads",
+        UPLOADS_DIR,
         files.aadhaarFront[0].filename
       );
 
       const aadhaarBackPath = path.join(
-        __dirname,
-        "../../../uploads",
+        UPLOADS_DIR,
         files.aadhaarBack[0].filename
       );
 
@@ -54,16 +55,6 @@ export default class OcrController implements IOcrController {
         aadhaarFrontPath,
         aadhaarBackPath
       );
-      // const extractedAadhaarData =  {
-      //   address: 'C/O Shivpujan Rai, hulsi niwas, salimpur ahra, Phulwari, Patna, Bihar',
-      //   pincode: '800003',
-      //   uid: '8867 0905 4086',
-      //   name: 'RAUSHAN KUMAR',
-      //   dob: '26/07/1994',
-      //   gender: 'MALE',
-      //   isUidMatch: true,
-      //   ageBand: '30-40 (Age: 31)'
-      // }
       res.status(200).json({
         message: HttpResMsg.SUCCESS,
         extractedAadhaarData,

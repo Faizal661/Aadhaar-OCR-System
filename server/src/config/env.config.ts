@@ -28,20 +28,10 @@ const env = {
     return process.env.CLIENT_ORIGIN;
   },
 
-  get GOOGLE_APPLICATION_CREDENTIALS() {
-    if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-      throw new CustomError(
-        EnvErrMsg.GOOGLE_APPLICATION_CREDENTIALS_UNDEFINED,
-        HttpResCode.INTERNAL_SERVER_ERROR
-      );
-    }
-    return process.env.GOOGLE_APPLICATION_CREDENTIALS;
-  },
-
   get OCR_API_KEY(): string {
     if (!process.env.OCR_API_KEY) {
       throw new CustomError(
-        "OCR API Token is missing in environment variables.",
+        EnvErrMsg.OCR_API_TOKEN,
         HttpResCode.INTERNAL_SERVER_ERROR
       );
     }

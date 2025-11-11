@@ -44,9 +44,10 @@ export const enum HttpResMsg {
   SOMETHING_WENT_WRONG = "Something went wrong.",
 
   IMAGE_SIZE_TOO_LARGE = "Image size limit exceeded",
-  BOTH_IMAGES_NEEDED="Both files were needed to extract details.",
+  BOTH_IMAGES_NEEDED = "Both files were needed to extract details.",
 
-  FAILED_TO_EXTRACT_DETAILS="Failed to extract aadhaar details",
-  FAILED_TO_REMOVE_FILES='Failed to remove files.',
-  UID_IS_NOT_SAME="UID is not same in both images",
+  FAILED_TO_EXTRACT_DETAILS = "Failed to extract aadhaar details",
+  FAILED_TO_PARSE_JSON = "Failed to parse JSON from Gemini API. Data structure error.",
+  FAILED_TO_REMOVE_FILES = "Failed to remove files.",
+  UID_IS_NOT_SAME = "UID is not same in both images",
 }
