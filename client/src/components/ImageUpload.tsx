@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import uploadAadhaarImages from "../services/uploadAadhaar";
 import { useAadhaar } from "../contexts/aadhaarContext";
 import toast from "react-hot-toast";
+import { AxiosError } from "axios";
 
 const ImageUpload = () => {
   const { setOcrResult, setIsProcessing } = useAadhaar();
@@ -26,27 +27,28 @@ const ImageUpload = () => {
       setOcrResult(null);
     },
     onSuccess: (data) => {
-      console.log("Upload successful!", data);
+      // console.log("Upload successful!", data);
       toast.success("Successfully parsed Aadhaar details.", {
         icon: "✅",
         style: {
           borderRadius: "10px",
-          background:'#99FF99'
+          background: "#99FF99",
         },
       });
       setOcrResult(data.extractedAadhaarData);
     },
     onError: (err) => {
       setOcrResult(null);
-      toast(
-        err.message || "Failed to parse Aadhaar details due to server error.",
-        {
-          icon: "❌",
-          style: {
-            borderRadius: "10px",
-          },
-        }
-      );
+      let errorMessage = "Failed to parse Aadhaar details due to server error.";
+      if (err instanceof AxiosError && err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      toast(errorMessage, {
+        icon: "❌",
+        style: {
+          borderRadius: "10px",
+        },
+      });
     },
     onSettled: () => {
       setIsProcessing(false);
@@ -104,7 +106,7 @@ const ImageUpload = () => {
         icon: "❌",
         style: {
           borderRadius: "10px",
-          background:"#f333"
+          background: "#f333",
         },
       });
       return;
