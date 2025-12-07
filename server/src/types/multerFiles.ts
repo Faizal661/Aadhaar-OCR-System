@@ -12,7 +12,3 @@ export type MulterFiles = {
     aadhaarBack?: MulterFile[];
     [fieldname: string]: MulterFile[] | undefined;
 };
-
-// export interface MulterFiles {
-//   [fieldname: string]: Express.Multer.File[];
-// }

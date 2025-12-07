@@ -26,7 +26,7 @@ const errorHandler = (
   }
 
   // Handle server errors
-  res.status(500).json({
+  res.status(HttpResCode.INTERNAL_SERVER_ERROR).json({
     error: HttpResMsg.INTERNAL_SERVER_ERROR,
     message: err.message || HttpResMsg.SOMETHING_WENT_WRONG,
   });

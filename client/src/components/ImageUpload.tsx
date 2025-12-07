@@ -27,7 +27,6 @@ const ImageUpload = () => {
       setOcrResult(null);
     },
     onSuccess: (data) => {
-      // console.log("Upload successful!", data);
       toast.success("Successfully parsed Aadhaar details.", {
         icon: "✅",
         style: {
